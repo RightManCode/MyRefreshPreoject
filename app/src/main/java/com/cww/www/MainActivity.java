@@ -1,5 +1,6 @@
 package com.cww.www;
 
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -7,18 +8,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cww.www.refreshview.MaterialRefreshLayout;
 import com.cww.www.refreshview.MaterialRefreshListener;
+import com.cww.www.utils.CodeUtils;
+
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private SwipeRefreshLayout refreshLayout;
 
-    private TextView textView;
+    private ImageView code;
 
-    private int i = 0;
+    private String codeString = "";
+
+    private Random random = new Random(10);
 
     private Handler messageHandler = new Handler() {
         @Override
@@ -28,9 +35,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             switch (msg.what) {
                 case 0: {
                     if (refreshLayout.isRefreshing()) {
-                        i++;
-                        textView.setText("刷新完成，次数：" + i);
+                        //  textView.setText("刷新完成，次数：" + i);
                         refreshLayout.setRefreshing(false);
+                        Bitmap bitmap = CodeUtils.getInstance().createBitmap(codeString);
+                        code.setImageBitmap(bitmap);
                         Log.e("cww", "hhahahaha");
                     }
                 }
@@ -44,7 +52,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
-        textView = (TextView) findViewById(R.id.tv_text);
+        code = (ImageView) findViewById(R.id.iv_code);
+        //  textView = (TextView) findViewById(R.id.tv_text);
         initRefreshLayout();
     }
 
@@ -66,5 +75,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         Message msg = new Message();
         msg.what = 0;
         messageHandler.sendMessageDelayed(msg, 3000);
+        for (int i = 0; i < 4; i++) {
+            codeString += String.valueOf(random.nextInt());
+        }
     }
 }
