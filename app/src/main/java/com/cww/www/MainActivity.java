@@ -23,9 +23,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private ImageView code;
 
-    private String codeString = "";
-
-    private Random random = new Random(10);
+    private Random random = new Random();
 
     private Handler messageHandler = new Handler() {
         @Override
@@ -37,6 +35,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     if (refreshLayout.isRefreshing()) {
                         //  textView.setText("刷新完成，次数：" + i);
                         refreshLayout.setRefreshing(false);
+                        String codeString = "";
+                        for (int i = 0; i < 4; i++) {
+                            codeString += String.valueOf(random.nextInt(10));
+                        }
                         Bitmap bitmap = CodeUtils.getInstance().createBitmap(codeString);
                         code.setImageBitmap(bitmap);
                         Log.e("cww", "hhahahaha");
@@ -75,8 +77,5 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         Message msg = new Message();
         msg.what = 0;
         messageHandler.sendMessageDelayed(msg, 3000);
-        for (int i = 0; i < 4; i++) {
-            codeString += String.valueOf(random.nextInt());
-        }
     }
 }
